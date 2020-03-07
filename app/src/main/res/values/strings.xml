@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Youpics</string>
+    <string name="buttonName">Concatenate</string>
+    <string name="enterText">Enter Text</string>
+</resources>

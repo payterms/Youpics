@@ -1,7 +1,7 @@
 package ru.payts.youpics.standart.model;
 
 public class Model {
-	private String resultString;
+	private String resultString = "";
 
 	public String getResultString() {
 		return resultString;
