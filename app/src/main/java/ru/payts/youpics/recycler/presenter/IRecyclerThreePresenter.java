@@ -5,6 +5,6 @@ import ru.payts.youpics.recycler.view.IViewHolder;
 
 public interface IRecyclerThreePresenter {
     void bindView(IViewHolder iViewHolder);
-
     int getItemCount();
+    void imgClicked(int x);
 }

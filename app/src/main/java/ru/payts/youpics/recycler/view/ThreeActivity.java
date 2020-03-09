@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.payts.youpics.R;
@@ -30,4 +29,5 @@ public class ThreeActivity extends AppCompatActivity {
         MyAdapter myAdapter = new MyAdapter(presenter.getRecyclerMainPresenter());
         recyclerView.setAdapter(myAdapter);
     }
+
 }
