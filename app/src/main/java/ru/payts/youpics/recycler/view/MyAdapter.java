@@ -1,6 +1,5 @@
 package ru.payts.youpics.recycler.view;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private static final String TAG = "RecyclerView";
     private IRecyclerThreePresenter iRecyclerMainPresenter;
 
-    public MyAdapter(IRecyclerThreePresenter iRecyclerMainPresenter) {
+    MyAdapter(IRecyclerThreePresenter iRecyclerMainPresenter) {
         this.iRecyclerMainPresenter = iRecyclerMainPresenter;
     }
 
@@ -39,12 +38,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return iRecyclerMainPresenter.getItemCount();
     }
 
+
     class MyViewHolder extends RecyclerView.ViewHolder implements IViewHolder {
 
         private ImageView imgView;
         private int position = 0;
 
-        public MyViewHolder(@NonNull View itemView) {
+        MyViewHolder(@NonNull View itemView) {
             super(itemView);
             imgView = itemView.findViewById(R.id.img_view);
         }
@@ -54,11 +54,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             imgView.setImageResource(resID);
             imgView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Log.d(TAG, "Image pressed ID " + position);
+                    iRecyclerMainPresenter.imgClicked(position);
                 }
             });
         }
-
         @Override
         public int getPos() {
             return position;

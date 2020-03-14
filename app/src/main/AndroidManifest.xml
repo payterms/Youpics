@@ -10,10 +10,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".recycler.view.ThreeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".moxy.view.SecondActivity">
 
@@ -21,6 +18,22 @@
         <activity android:name=".standart.view.MainActivity">
 
         </activity>
+
+
+        <activity android:name=".asynctask.AsyncActivity">
+        </activity>
+        <activity android:name=".observer.ObserverActivity">
+
+
+        </activity>
+        <activity android:name=".mailing.MailingActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 
