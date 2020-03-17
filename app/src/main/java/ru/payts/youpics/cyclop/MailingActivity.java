@@ -1,4 +1,4 @@
-package ru.payts.youpics.mailing;
+package ru.payts.youpics.cyclop;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import ru.payts.youpics.R;
@@ -22,42 +23,36 @@ public class MailingActivity extends AppCompatActivity {
 
     private MailingPresenter mailingPresenter;
     private Observable<String> observable;
-    private Disposable disposable;
+    private Single<String> single;
 
-    @BindView(R.id.text_view_activity_mailing)
+    private Disposable disposableSingle;
+
+    // Машу каслом не испортишь (Butterknife)
+    @BindView(R.id.text_view_activity_cyclop)
     TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rxmailing);
+        setContentView(R.layout.activity_cyclop);
 
         mailingPresenter = new MailingPresenter();
-        observable = mailingPresenter.getSomeMail();
+        single = mailingPresenter.getOneMail();
 
         ButterKnife.bind(this);
     }
-    @OnClick(R.id.buttonSubscribe)
-    public void subscribe(View view) {
-        //.observeOn(AndroidSchedulers.mainThread()) - мантра для вывода результата в основной поток
-        // т.к. только из основного потока можно работать с View
-        // "многокодовость" убираем с помощью лямбда-выражений
-        disposable = observable.observeOn(AndroidSchedulers.mainThread()).subscribe(message -> {
-            //onNext code
-            Log.d(TAG, "onNext: " + Thread.currentThread().getName() + ": " + message);
+
+    @OnClick(R.id.buttonCyclop) // Цепляем слушатель на кнопку циклопки. Кнопка одна - от того и циклопка
+    public void subscribeSingle(View view) {
+        disposableSingle = single.observeOn(AndroidSchedulers.mainThread()).subscribe(message -> {
+            //onSuccess code
+            Log.d(TAG, "onSuccess: " + Thread.currentThread().getName() + ": " + message);
             textView.setText(message);
         }, throwable -> {
             //onError code
             Log.e(TAG, "onError: " + throwable);
-        }, () -> {
-            //onComplete code
-            Log.d(TAG, "onComplete: ");
         });
         Log.d(TAG, "subscribe: end " + Thread.currentThread().getName());
     }
 
-    @OnClick(R.id.buttonUnSubscribe)
-    public void unsubscribe(View view) {
-        disposable.dispose();
-    }
 }

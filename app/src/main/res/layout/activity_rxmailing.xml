@@ -3,24 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".mailing.MailingActivity">
 
     <Button
-        android:text="subscribe"
-        android:onClick="subscribe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:id="@+id/buttonSubscribe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="subscribe" />
 
     <Button
-        android:text="unsubscribe"
-        android:onClick="unsubscribe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:id="@+id/buttonUnSubscribe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="unsubscribe" />
 
     <TextView
+        android:layout_width="match_parent"
         android:id="@+id/text_view_activity_mailing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="32dp" />
 
 </LinearLayout>
