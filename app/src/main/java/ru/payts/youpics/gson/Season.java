@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 class Season {
     @Expose
     @SerializedName("time_of_year")
-    String time_of_year;
+    String timeOfYear;
 
     @Expose
     @SerializedName("year")

@@ -40,10 +40,10 @@ public class RetrofitActivity extends AppCompatActivity implements RetrofitActiv
     }
 
     @Override
-    public void showUserImage(String x) {
+    public void showUserImage(String urlLink) {
         Picasso
                 .get()
-                .load(x)
+                .load(urlLink)
                 .into(imageView);
     }
 
