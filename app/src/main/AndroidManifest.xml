@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.payts.youpics">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,19 +26,22 @@
         </activity>
         <activity android:name=".observer.ObserverActivity">
 
-
         </activity>
         <activity android:name=".mailing.MailingActivity">
 
         </activity>
         <activity android:name=".cyclop.MailingActivity">
+        </activity>
+        <activity android:name=".gson.GsonActivity">
+
+        </activity>
+        <activity android:name=".retrofit.RetrofitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 
