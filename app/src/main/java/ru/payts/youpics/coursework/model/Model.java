@@ -1,4 +1,4 @@
-package ru.payts.youpics.mvp.model;
+package ru.payts.youpics.coursework.model;
 
 import android.util.Log;
 

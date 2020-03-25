@@ -8,7 +8,6 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import ru.payts.youpics.YoupicsApp;
 
 
 class RoomPresenter {
@@ -18,7 +17,7 @@ class RoomPresenter {
     private UserDao userDao;
 
     RoomPresenter() {
-        userDao = YoupicsApp.getAppDatabase().fruitDao();
+        userDao = YoupicsAppRoom.getAppDatabase().fruitDao();
     }
 
 

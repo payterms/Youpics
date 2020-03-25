@@ -1,4 +1,4 @@
-package ru.payts.youpics.mvp.model.entity;
+package ru.payts.youpics.coursework.model.entity;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

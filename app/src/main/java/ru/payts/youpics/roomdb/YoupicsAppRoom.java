@@ -1,4 +1,4 @@
-package ru.payts.youpics;
+package ru.payts.youpics.roomdb;
 
 import android.app.Application;
 
@@ -6,7 +6,7 @@ import androidx.room.Room;
 
 import ru.payts.youpics.roomdb.AppDatabase;
 
-public class YoupicsApp extends Application {
+public class YoupicsAppRoom extends Application {
 
     private static AppDatabase appDatabase;
 
