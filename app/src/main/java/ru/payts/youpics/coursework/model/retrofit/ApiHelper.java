@@ -31,6 +31,6 @@ public class ApiHelper {
                 .build()
                 .create(IApiService.class);
 
-        return api.getPhotoSet(apiKey,1,50).subscribeOn(Schedulers.io());
+        return api.getPhotoSet(apiKey, "",1,50, "").subscribeOn(Schedulers.io());
     }
 }

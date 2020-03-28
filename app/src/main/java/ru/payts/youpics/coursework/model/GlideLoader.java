@@ -12,11 +12,11 @@ public class GlideLoader {
     public GlideLoader(Context context) {
         this.context = context;
     }
-
     public void loadImage(String url, ImageView imageView){
         Glide
                 .with(context)
                 .load(url)
+                .fitCenter()
                 .into(imageView);
     }
 }

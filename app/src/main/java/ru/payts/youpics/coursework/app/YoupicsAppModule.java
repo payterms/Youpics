@@ -4,6 +4,8 @@ import android.app.Application;
 
 import java.util.ArrayList;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import ru.payts.youpics.coursework.model.PhotoData;
@@ -18,11 +20,13 @@ public class YoupicsAppModule {
         this.application = application;
     }
 
+    @Singleton
     @Provides
     ApiHelper provideApiHelper() {
         return new ApiHelper();
     }
 
+    @Singleton
     @Provides
     PhotoData providePhotoData(PhotoSet photoSet) {
         return new PhotoData(photoSet);
@@ -34,6 +38,5 @@ public class YoupicsAppModule {
         photoSet.hits = new ArrayList<>();
         return photoSet;
     }
-
 
 }

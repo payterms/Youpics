@@ -61,11 +61,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         @Override
         public void setImage(String url) {
             glideLoader.loadImage(url, imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    i2RecyclerMain.imgClicked(position);
-                }
-            });
+            imageView.setOnClickListener(v -> i2RecyclerMain.imgClicked(position));
         }
 
         @Override

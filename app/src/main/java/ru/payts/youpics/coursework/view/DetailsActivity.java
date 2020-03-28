@@ -2,7 +2,11 @@ package ru.payts.youpics.coursework.view;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.ActionBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -11,14 +15,19 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.payts.youpics.R;
 import ru.payts.youpics.coursework.app.YoupicsApp;
+import ru.payts.youpics.coursework.model.GlideLoader;
 import ru.payts.youpics.coursework.presenter.DetailsPresenter;
 
 public class DetailsActivity extends MvpAppCompatActivity implements DetailsView {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "DetailsActivity";
+
+    private int selectedItemPos;
+
+    private GlideLoader glideLoader;
 
     @BindView(R.id.detailsImageView)
-    ImageView detailsView;
+    ImageView detailsImageView;
 
     @InjectPresenter
     DetailsPresenter presenter;
@@ -31,19 +40,41 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prepareFullScreenWindow();
         setContentView(R.layout.activity_detailsmvp);
         YoupicsApp.getAppComponent().injectDetailsActivity(this);
         ButterKnife.bind(this);
+        Bundle arguments = getIntent().getExtras();
+        selectedItemPos = arguments.getInt("clickedItemPos");
+        Log.d(TAG, "clickedItemPos: " + selectedItemPos);
         initViews();
     }
 
-    private void initViews(){
+    private void initViews() {
+        glideLoader = new GlideLoader(this);
         Log.d(TAG, "initViews details: ");
-        detailsView.setImageResource(R.drawable.blackcode);
+        detailsImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        detailsImageView.setAdjustViewBounds(true);
+        glideLoader.loadImage(presenter.getPhotoUrlByPos(selectedItemPos), detailsImageView);
     }
-
+    private void prepareFullScreenWindow() {
+        // remove title
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        ActionBar actionBar = getSupportActionBar ();
+        if (actionBar!=null){
+            actionBar.hide();
+        }
+    }
     @Override
     public void updateImageView() {
         Log.d(TAG, "updateRecyclerView: ");
+    }
+
+    @Override
+    public void setImage(String url) {
+        glideLoader.loadImage(url, detailsImageView);
+        //detailsImageView.setOnClickListener(v -> presenter.getActionDetails().imgClicked(position));
     }
 }

@@ -1,11 +1,14 @@
 package ru.payts.youpics.coursework.view;
 
 import moxy.MvpView;
-import moxy.viewstate.strategy.SkipStrategy;
+import moxy.viewstate.strategy.OneExecutionStateStrategy;
+import moxy.viewstate.strategy.SingleStateStrategy;
 import moxy.viewstate.strategy.StateStrategyType;
 
 public interface MainView extends MvpView {
-    @StateStrategyType(value = SkipStrategy.class)
+    @StateStrategyType(value = SingleStateStrategy.class)
     void updateRecyclerView();
-    void startDetailsActivity();
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void startDetailsActivity(int pos);
 }

@@ -22,4 +22,10 @@ public class Hit {
     @Expose
     @SerializedName("views")
     public int views;
+    @Expose
+    @SerializedName("user_id")
+    public String user_id;
+    @Expose
+    @SerializedName("userImageURL")
+    public String userImageURL;
 }

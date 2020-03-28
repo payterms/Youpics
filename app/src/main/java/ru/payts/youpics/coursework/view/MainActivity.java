@@ -56,7 +56,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     }
 
     @Override
-    public void startDetailsActivity() {
-        startActivity(new Intent(this, DetailsActivity.class));
+    public void startDetailsActivity(int pos) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("clickedItemPos", pos);
+        startActivity(intent);
     }
 }

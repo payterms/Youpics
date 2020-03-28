@@ -23,27 +23,30 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     private static final String TAG = "DetailsPresenter";
 
+
     @Inject
     ApiHelper apiHelper;
+
     @Inject
     PhotoData photoData;
 
     Context context;
 
-
     public DetailsPresenter(Context ct) {
         YoupicsApp.getAppComponent().injectDetailsPresenter(this);
         Log.d(TAG, "DetailsPresenter: ");
+
         context = ct;
     }
 
     @Override
     protected void onFirstViewAttach() {
-        getSinglePhoto(1);
+        Log.d(TAG, "DetailsPresenter: onFirstViewAttach ");
+        //getSinglePhoto(1);
     }
 
     public void getSinglePhoto(int id) {
-        String apiKey =  context.getString(R.string.pixabay_api_key);
+        String apiKey = context.getString(R.string.pixabay_api_key);
         Observable<PhotoSet> single = apiHelper.requestServer(apiKey);
 
         Disposable disposable = single.observeOn(AndroidSchedulers.mainThread()).subscribe(photoSet -> {
@@ -55,6 +58,10 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         });
     }
 
+    public String getPhotoUrlByPos(int index) {
+        return photoData.getElementValueAtIndex(index).webformatURL;
+    }
+
     private class ActionDetails implements I2Details {
         @Override
         public void imgClicked(int ID) {
@@ -64,4 +71,6 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
             Log.d(TAG, String.format("Img %d clicked %s time(s)", ID, hit.views));
         }
     }
+
+
 }

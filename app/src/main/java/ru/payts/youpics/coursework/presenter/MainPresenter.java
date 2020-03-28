@@ -78,12 +78,12 @@ public class MainPresenter extends MvpPresenter<MainView> {
         }
 
         @Override
-        public void imgClicked(int ID) {
-            Hit hit = photoData.getElementValueAtIndex(ID);
+        public void imgClicked(int itemPos) {
+            Hit hit = photoData.getElementValueAtIndex(itemPos);
             hit.views++;
-            photoData.setElementValueAtIndex(ID, hit);
-            Log.d(TAG, String.format("Img %d clicked %s time(s)", ID, hit.views));
-            getViewState().startDetailsActivity();
+            photoData.setElementValueAtIndex(itemPos, hit);
+            Log.d(TAG, String.format("Img %d clicked %s time(s)", itemPos, hit.views));
+            getViewState().startDetailsActivity(itemPos);
         }
     }
 
