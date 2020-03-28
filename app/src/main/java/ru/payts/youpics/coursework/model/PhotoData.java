@@ -1,17 +1,18 @@
-package ru.payts.youpics.mvp.model;
+package ru.payts.youpics.coursework.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ru.payts.youpics.mvp.model.entity.Hit;
-import ru.payts.youpics.mvp.model.entity.PhotoSet;
+import javax.inject.Inject;
 
-public class Data {
+import ru.payts.youpics.coursework.model.entity.Hit;
+import ru.payts.youpics.coursework.model.entity.PhotoSet;
+
+public class PhotoData {
     private PhotoSet photoSet;
 
-    public Data() {
-        photoSet = new PhotoSet();
-        photoSet.hits = new ArrayList<>();
+    @Inject
+    public PhotoData(PhotoSet photoSetRef) {
+        this.photoSet = photoSetRef;
     }
 
     public List<Hit> getList() {

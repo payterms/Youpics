@@ -1,9 +1,9 @@
-package ru.payts.youpics.mvp.presenter;
+package ru.payts.youpics.coursework.presenter;
 
 import android.content.Context;
 import android.util.Log;
 
-import java.util.List;
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -11,12 +11,13 @@ import io.reactivex.disposables.Disposable;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.payts.youpics.R;
-import ru.payts.youpics.mvp.model.Data;
-import ru.payts.youpics.mvp.model.entity.Hit;
-import ru.payts.youpics.mvp.model.entity.PhotoSet;
-import ru.payts.youpics.mvp.model.retrofit.ApiHelper;
-import ru.payts.youpics.mvp.view.IViewHolder;
-import ru.payts.youpics.mvp.view.MainView;
+import ru.payts.youpics.coursework.app.YoupicsApp;
+import ru.payts.youpics.coursework.model.PhotoData;
+import ru.payts.youpics.coursework.model.entity.Hit;
+import ru.payts.youpics.coursework.model.entity.PhotoSet;
+import ru.payts.youpics.coursework.model.retrofit.ApiHelper;
+import ru.payts.youpics.coursework.view.IViewHolder;
+import ru.payts.youpics.coursework.view.MainView;
 
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
@@ -24,17 +25,20 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private static final String TAG = "MainPresenter";
 
     private RecyclerMain recyclerMain;
-    private ApiHelper apiHelper;
-    private Data   photoData;
-    //private List<Hit> hitList;
+
+    @Inject
+    ApiHelper apiHelper;
+
+    @Inject
+    PhotoData photoData;
+
     private Context context;
 
 
     public MainPresenter(Context ct) {
+        YoupicsApp.getAppComponent().injectMainPresenter(this);
         Log.d(TAG, "MainPresenter: ");
         recyclerMain = new RecyclerMain();
-        apiHelper = new ApiHelper();
-        photoData = new Data();
         context = ct;
     }
 
@@ -51,9 +55,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
             photoData.setTotal(photoSet.total);
             photoData.setTotalHits(photoSet.totalHits);
             photoData.setList(photoSet.hits);
-
-            //hitList = photoSet.hits;
-
             getViewState().updateRecyclerView();
 
         }, throwable -> {
@@ -82,6 +83,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
             hit.views++;
             photoData.setElementValueAtIndex(ID, hit);
             Log.d(TAG, String.format("Img %d clicked %s time(s)", ID, hit.views));
+            getViewState().startDetailsActivity();
         }
     }
 

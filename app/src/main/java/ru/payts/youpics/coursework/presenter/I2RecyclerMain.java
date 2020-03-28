@@ -1,6 +1,6 @@
-package ru.payts.youpics.mvp.presenter;
+package ru.payts.youpics.coursework.presenter;
 
-import ru.payts.youpics.mvp.view.IViewHolder;
+import ru.payts.youpics.coursework.view.IViewHolder;
 
 public interface I2RecyclerMain {
     void bindView(IViewHolder iViewHolder);

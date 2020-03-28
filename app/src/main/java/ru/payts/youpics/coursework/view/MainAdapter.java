@@ -1,4 +1,4 @@
-package ru.payts.youpics.mvp.view;
+package ru.payts.youpics.coursework.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.payts.youpics.R;
-import ru.payts.youpics.mvp.model.GlideLoader;
-import ru.payts.youpics.mvp.presenter.I2RecyclerMain;
+import ru.payts.youpics.coursework.model.GlideLoader;
+import ru.payts.youpics.coursework.presenter.I2RecyclerMain;
 
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {

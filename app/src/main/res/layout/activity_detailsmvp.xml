@@ -5,11 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".coursework.view.MainActivity">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_activity_main"
+    tools:context=".coursework.view.DetailsActivity">
+    <ImageView
+        android:id="@+id/detailsImageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/blackcode" />
 </LinearLayout>

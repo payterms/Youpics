@@ -1,5 +1,6 @@
-package ru.payts.youpics.mvp.view;
+package ru.payts.youpics.coursework.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,7 +13,8 @@ import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.payts.youpics.R;
-import ru.payts.youpics.mvp.presenter.MainPresenter;
+import ru.payts.youpics.coursework.app.YoupicsApp;
+import ru.payts.youpics.coursework.presenter.MainPresenter;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView {
 
@@ -35,12 +37,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainmvp);
-
+        YoupicsApp.getAppComponent().injectMainActivity(this);
         ButterKnife.bind(this);
         initRecyclerView();
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
         mainAdapter = new MainAdapter(this, presenter.getRecyclerMain());
@@ -51,5 +53,10 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     public void updateRecyclerView() {
         Log.d(TAG, "updateRecyclerView: ");
         mainAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void startDetailsActivity() {
+        startActivity(new Intent(this, DetailsActivity.class));
     }
 }
