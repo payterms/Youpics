@@ -22,7 +22,7 @@ public class ThreePresenter {
 
         @Override
         public void bindView(IViewHolder holder) {
-            holder.setView(R.drawable.blackcode);
+            holder.setView(R.drawable.notfound);
         }
 
         @Override

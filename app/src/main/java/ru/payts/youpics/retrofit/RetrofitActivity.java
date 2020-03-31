@@ -49,6 +49,6 @@ public class RetrofitActivity extends AppCompatActivity implements RetrofitActiv
 
     @Override
     public void clearImage() {
-        imageView.setImageResource(R.drawable.blackcode);
+        imageView.setImageResource(R.drawable.notfound);
     }
 }

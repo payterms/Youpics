@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.ActionBar;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import moxy.MvpAppCompatActivity;
@@ -16,6 +18,7 @@ import moxy.presenter.ProvidePresenter;
 import ru.payts.youpics.R;
 import ru.payts.youpics.coursework.app.YoupicsApp;
 import ru.payts.youpics.coursework.model.GlideLoader;
+import ru.payts.youpics.coursework.model.entity.Hit;
 import ru.payts.youpics.coursework.presenter.DetailsPresenter;
 
 public class DetailsActivity extends MvpAppCompatActivity implements DetailsView {
@@ -24,7 +27,8 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     private int selectedItemPos;
 
-    private GlideLoader glideLoader;
+    @Inject
+    GlideLoader glideLoader;
 
     @BindView(R.id.detailsImageView)
     ImageView detailsImageView;
@@ -51,11 +55,11 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     private void initViews() {
-        glideLoader = new GlideLoader(this);
+        //glideLoader = new GlideLoader(this);
         Log.d(TAG, "initViews details: ");
         detailsImageView.setScaleType(ImageView.ScaleType.FIT_XY);
         detailsImageView.setAdjustViewBounds(true);
-        glideLoader.loadImage(presenter.getPhotoUrlByPos(selectedItemPos), detailsImageView);
+        glideLoader.loadImage(presenter.getPhotoByPos(selectedItemPos), detailsImageView);
     }
     private void prepareFullScreenWindow() {
         // remove title
@@ -73,8 +77,8 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     @Override
-    public void setImage(String url) {
-        glideLoader.loadImage(url, detailsImageView);
+    public void setImage(Hit hit) {
+        glideLoader.loadImage(hit, detailsImageView);
         //detailsImageView.setOnClickListener(v -> presenter.getActionDetails().imgClicked(position));
     }
 }

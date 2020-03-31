@@ -17,7 +17,7 @@ class RoomPresenter {
     private UserDao userDao;
 
     RoomPresenter() {
-        userDao = YoupicsAppRoom.getAppDatabase().fruitDao();
+        userDao = YoupicsAppRoom.getAppDatabase().userDao();
     }
 
 

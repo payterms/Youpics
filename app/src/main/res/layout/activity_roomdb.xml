@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:onClick="addUser"
-        android:text="Add user"
+        android:text="Add hit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

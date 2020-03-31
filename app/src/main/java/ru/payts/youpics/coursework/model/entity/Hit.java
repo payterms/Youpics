@@ -28,4 +28,6 @@ public class Hit {
     @Expose
     @SerializedName("userImageURL")
     public String userImageURL;
+
+
 }

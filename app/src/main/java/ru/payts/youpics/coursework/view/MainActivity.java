@@ -1,6 +1,8 @@
 package ru.payts.youpics.coursework.view;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -43,7 +45,15 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     }
 
     private void initRecyclerView() {
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        int spanCount;
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            spanCount = 2;
+        }
+        else{
+            spanCount = 3;
+        }
+        GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
         mainAdapter = new MainAdapter(this, presenter.getRecyclerMain());
         recyclerView.setAdapter(mainAdapter);

@@ -30,7 +30,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     @Inject
     PhotoData photoData;
 
-    Context context;
+    private Context context;
 
     public DetailsPresenter(Context ct) {
         YoupicsApp.getAppComponent().injectDetailsPresenter(this);
@@ -53,13 +53,11 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
             photoData.setTotal(photoSet.total);
             photoData.setTotalHits(photoSet.totalHits);
             photoData.setList(photoSet.hits);
-        }, throwable -> {
-            Log.e(TAG, "onError " + throwable);
-        });
+        }, throwable -> Log.e(TAG, "onError " + throwable));
     }
 
-    public String getPhotoUrlByPos(int index) {
-        return photoData.getElementValueAtIndex(index).webformatURL;
+    public Hit getPhotoByPos(int index) {
+        return photoData.getElementValueAtIndex(index);
     }
 
     private class ActionDetails implements I2Details {

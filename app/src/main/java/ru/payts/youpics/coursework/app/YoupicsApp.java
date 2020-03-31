@@ -2,6 +2,8 @@ package ru.payts.youpics.coursework.app;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 public class YoupicsApp extends Application {
 
     private static YoupicsAppComponent appComponent;
@@ -9,8 +11,11 @@ public class YoupicsApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //чтобы убратиь ошибку " cannot resolve symbol DaggerYoupicsAppComponent "
-        // необходимо сбилдить проект (DaggerAppComponent будет в ap_generated_sources)
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        LeakCanary.install(this);
+
         appComponent = generateAppComponent();
     }
 
