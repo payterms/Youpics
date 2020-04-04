@@ -2,13 +2,12 @@ package ru.payts.youpics.coursework.model.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
 
-import ru.payts.youpics.coursework.model.entity.Hit;
-
-@Entity(tableName = "table_hits")
+@Entity(tableName = "table_hits", indices = {@Index(value = "picId", unique = true)})
 public class HitRec {
     @PrimaryKey(autoGenerate = true)
     public int id;

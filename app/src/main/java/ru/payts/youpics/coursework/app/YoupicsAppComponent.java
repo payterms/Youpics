@@ -3,7 +3,6 @@ package ru.payts.youpics.coursework.app;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import ru.payts.youpics.coursework.model.GlideLoader;
 import ru.payts.youpics.coursework.presenter.DetailsPresenter;
 import ru.payts.youpics.coursework.presenter.MainPresenter;
 import ru.payts.youpics.coursework.view.DetailsActivity;

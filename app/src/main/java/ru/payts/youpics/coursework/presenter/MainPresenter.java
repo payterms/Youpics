@@ -28,6 +28,7 @@ import ru.payts.youpics.coursework.model.database.HitRec;
 import ru.payts.youpics.coursework.model.database.YoupicsDatabase;
 import ru.payts.youpics.coursework.model.entity.Hit;
 import ru.payts.youpics.coursework.model.entity.PhotoSet;
+import ru.payts.youpics.coursework.model.glide.GlideLoader;
 import ru.payts.youpics.coursework.model.retrofit.ApiHelper;
 import ru.payts.youpics.coursework.view.IViewHolder;
 import ru.payts.youpics.coursework.view.MainView;
@@ -42,6 +43,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     @Inject
     ApiHelper apiHelper;
+
+    @Inject
+    GlideLoader glideLoader;
 
     @Inject
     PhotoData photoData;
@@ -64,20 +68,67 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     @Override
     protected void onFirstViewAttach() {
-        getAllHitsFromDatabase(photoData.getList());
+        getPhotoListFromServer(context, "", true);
     }
 
-    public void getAllPhotoFromServer() {
+    public void clearPicturesCache(Context context){
+        photoData.clearList();
+        glideLoader.clearAllImagesFromStorage();
+        Disposable disposable = hitDao.deleteAll().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    Log.d(TAG, "Database cleared");
+                    getPhotoListFromServer(context, "", true);
+
+                }, throwable -> Log.d(TAG, "clearPicturesCache DB err " + throwable));
+
+    }
+
+    public void getPhotoListFromServer(Context context, String query, boolean editors_choice) {
         String apiKey = context.getString(R.string.pixabay_api_key);
-        Observable<PhotoSet> single = apiHelper.requestServer(apiKey);
+        /* чистим список фотографий для отображения*/
+        photoData.clearList();
+
+        Observable<PhotoSet> single = apiHelper.requestServer(apiKey, query, editors_choice );
 
         Disposable disposable = single.observeOn(AndroidSchedulers.mainThread()).subscribe(photoSet -> {
-            photoData.setTotal(photoSet.total);
-            photoData.setTotalHits(photoSet.totalHits);
-            photoData.setList(photoSet.hits);
-            addHits2Database(photoSet.hits);
-            getViewState().updateRecyclerView();
-
+            /*Список получен - анализируем его*/
+            for (Hit hitItem : photoSet.hits) {
+                /* Проверяем - есть ли такая картинка уже в базе среди загруженных */
+                Disposable disposableDaoGet = hitDao.getPictureRecordByPicId(hitItem.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(hitRec -> {
+                            // картинка уже есть есть в базе
+                            // будем отображать из кэша
+                            Log.d(TAG, "Picture with ID " + hitItem.id + "  is already in Database");
+                            photoData.addElement(hitItem);
+                            if(photoSet.hits.size() == photoData.getHitListSize()){
+                                getViewState().updateRecyclerView();
+                            }
+                        }, throwable -> {
+                            // картинки в базе нет - добавляем ее в базу и загружаем в кэш изображение
+                            Log.d(TAG, "No such picture in Database" + throwable);
+                            HitRec dbRec = new HitRec();
+                            dbRec.picId = hitItem.id;
+                            dbRec.webformatURL = hitItem.webformatURL;
+                            dbRec.imageWidth = hitItem.imageWidth;
+                            dbRec.imageHeight = hitItem.imageHeight;
+                            dbRec.imageSize = hitItem.imageSize;
+                            dbRec.views = hitItem.views;
+                            dbRec.userId = hitItem.user_id;
+                            dbRec.userImageURL = hitItem.userImageURL;
+                            Disposable disposableDaoInsert = hitDao.insert(dbRec).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(id -> {
+                                        Log.d(TAG, "Picture with ID " + hitItem.id + "  added to Database");
+                                        glideLoader.loadImageFromServer2Cache(context, hitItem);
+                                        // добавляем в список для RecycleView
+                                        photoData.addElement(hitItem);
+                                        if(photoSet.hits.size() == photoData.getHitListSize()){
+                                            getViewState().updateRecyclerView();
+                                        }
+                                    }, throwableDao -> {
+                                        Log.d(TAG, "Error while adding picture with ID: " + hitItem.id + throwableDao);
+                                    });
+                        });
+            }
         }, throwable -> Log.e(TAG, "onError " + throwable));
     }
 
@@ -85,24 +136,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
         @Override
         public void bindView(IViewHolder iViewHolder) {
-            int width = 480;
-            int height = 640;
-            DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager windowManager = (WindowManager) context
-                    .getSystemService(Context.WINDOW_SERVICE);
-            if (windowManager != null) {
-                windowManager.getDefaultDisplay().getMetrics(metrics);
-                width = metrics.widthPixels;
-                height = metrics.heightPixels;
-            }
-            if (height > width) {
-                // Vertical 2 span Grid layout
-                iViewHolder.setImageSize(width / 2, width / 2);
-            } else {
-                // Landscape 3 span Grid layout
-                iViewHolder.setImageSize(width / 3, width / 3);
-            }
-            iViewHolder.setImage(photoData.getElementValueAtIndex(iViewHolder.getPos()));
+            iViewHolder.showImageFromStorage(photoData.getElementValueAtIndex(iViewHolder.getPos()));
         }
 
         @Override
@@ -139,49 +173,13 @@ public class MainPresenter extends MvpPresenter<MainView> {
             dbRec.views = item.views;
             dbRec.userId = item.user_id;
             dbRec.userImageURL = item.userImageURL;
-
             Disposable disposable = hitDao.insert(dbRec).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(id -> Log.d(TAG, "dbRec added: " + id), throwable -> Log.d(TAG, "dbRec err: " + throwable));
+
+            Disposable disposabl2 = hitDao.insert(dbRec).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(id -> Log.d(TAG, "dbRec added: " + id), throwable -> Log.d(TAG, "dbRec err: " + throwable));
         }
 
-    }
-
-    private void getAllHitsFromDatabase(List<Hit> hitlist) {
-        Disposable disposable;
-        disposable = hitDao.getAll().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(hitRecs -> {
-                    Hit hit;
-                    for (HitRec hitRec : hitRecs) {
-                        hit = new Hit();
-                        hit.id = hitRec.picId;
-                        hit.webformatURL = hitRec.webformatURL;
-                        hit.imageWidth = hitRec.imageWidth;
-                        hit.imageHeight = hitRec.imageHeight;
-                        hit.imageSize = hitRec.imageSize;
-                        hit.views = hitRec.views;
-                        hit.user_id = hitRec.userId;
-                        hit.userImageURL = hitRec.userImageURL;
-                        // hitlist.add(hit);
-                        // Если ссылка битая для картинки , то пытаемся ее обновить по ее ID
-                        String apiKey = context.getString(R.string.pixabay_api_key);
-                        Observable<PhotoSet> single = apiHelper.requestServerByID(apiKey, hit.id);
-                        Disposable disposableUpd = single.observeOn(AndroidSchedulers.mainThread()).subscribe(photoSet -> {
-                            hitlist.add(photoSet.hits.get(0));
-                            if (hitlist.size() == hitRecs.size()) {
-                                photoData.setTotal(hitRecs.size());
-                                photoData.setTotalHits(hitRecs.size());
-                                getViewState().updateRecyclerView();
-                            }
-                            updateItemsByPicIdInDatabase(photoSet.hits.get(0));
-                        }, throwable -> Log.e(TAG, "onError " + throwable));
-
-                    }
-                    Log.d(TAG, "Got dbRec's items: " + hitRecs.size());
-                    if (hitRecs.size() == 0) {
-                        // Данных в базе нет - пытаемся получить их с сервера
-                        getAllPhotoFromServer();
-                    }
-                }, throwable -> Log.d(TAG, "dbRec err: " + throwable));
     }
 
     void checkLinks(List<Hit> hitlist) {
@@ -214,9 +212,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
 
     private void updateItemsByPicIdInDatabase(Hit item) {
-        Disposable disposable = hitDao.getAllByPicId(item.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        Disposable disposable = hitDao.getPictureRecordByPicId(item.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dbRecs -> {
-                    for (HitRec dbRec : dbRecs) {
+                    HitRec dbRec = new HitRec();
                         dbRec.webformatURL = item.webformatURL;
                         dbRec.imageWidth = item.imageWidth;
                         dbRec.imageHeight = item.imageHeight;
@@ -229,7 +227,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
                                 .subscribe(id -> {
                                     Log.d(TAG, "dbRec update " + id);
                                 }, throwable -> Log.d(TAG, "dbRec update err: " + throwable));
-                    }
+
                 }, throwable -> Log.d(TAG, "dbRec update err: " + throwable));
 
     }

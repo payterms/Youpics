@@ -23,6 +23,10 @@ public class PhotoData {
         photoSet.hits = hitList;
     }
 
+    public void clearList() {
+        photoSet.hits.clear();
+    }
+
     public int getTotal() {
         return photoSet.total;
     }
@@ -45,6 +49,10 @@ public class PhotoData {
 
     public void setElementValueAtIndex(int _index, Hit value) {
         photoSet.hits.set(_index, value);
+    }
+
+    public void addElement(Hit value) {
+        photoSet.hits.add(value);
     }
 
     public int getHitListSize(){

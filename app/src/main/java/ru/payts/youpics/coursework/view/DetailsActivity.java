@@ -17,7 +17,7 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.payts.youpics.R;
 import ru.payts.youpics.coursework.app.YoupicsApp;
-import ru.payts.youpics.coursework.model.GlideLoader;
+import ru.payts.youpics.coursework.model.glide.GlideLoader;
 import ru.payts.youpics.coursework.model.entity.Hit;
 import ru.payts.youpics.coursework.presenter.DetailsPresenter;
 
@@ -59,7 +59,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         Log.d(TAG, "initViews details: ");
         detailsImageView.setScaleType(ImageView.ScaleType.FIT_XY);
         detailsImageView.setAdjustViewBounds(true);
-        glideLoader.loadImage(presenter.getPhotoByPos(selectedItemPos), detailsImageView);
+        glideLoader.loadImageFromStorage(detailsImageView, presenter.getPhotoByPos(selectedItemPos));
     }
     private void prepareFullScreenWindow() {
         // remove title
@@ -78,7 +78,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void setImage(Hit hit) {
-        glideLoader.loadImage(hit, detailsImageView);
+        glideLoader.loadImageFromStorage(detailsImageView, hit);
         //detailsImageView.setOnClickListener(v -> presenter.getActionDetails().imgClicked(position));
     }
 }

@@ -1,11 +1,11 @@
 package ru.payts.youpics.coursework.view;
 
 import android.content.Context;
-import android.graphics.Point;
-import android.view.Display;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.payts.youpics.R;
 import ru.payts.youpics.coursework.app.YoupicsApp;
-import ru.payts.youpics.coursework.model.GlideLoader;
+import ru.payts.youpics.coursework.model.glide.GlideLoader;
 import ru.payts.youpics.coursework.model.entity.Hit;
 import ru.payts.youpics.coursework.presenter.I2RecyclerMain;
 
@@ -75,9 +75,33 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             params.height = height;
             imageView.setLayoutParams(params);
         }
+
         @Override
-        public void setImage(Hit hit) {
-            glideLoader.loadImage(hit, imageView);
+        public void showImageFromServer(Hit hit) {
+            glideLoader.loadImageFromServer(hit, imageView);
+            imageView.setOnClickListener(v -> i2RecyclerMain.imgClicked(position));
+        }
+
+        @Override
+        public void showImageFromStorage(Hit hit) {
+            int width = 480;
+            int height = 640;
+            DisplayMetrics metrics = new DisplayMetrics();
+            WindowManager windowManager = (WindowManager) imageView.getContext()
+                    .getSystemService(Context.WINDOW_SERVICE);
+            if (windowManager != null) {
+                windowManager.getDefaultDisplay().getMetrics(metrics);
+                width = metrics.widthPixels;
+                height = metrics.heightPixels;
+            }
+            if (height > width) {
+                // Vertical 2 span Grid layout
+                setImageSize(width / 2, width / 2);
+            } else {
+                // Landscape 3 span Grid layout
+                setImageSize(width / 3, width / 3);
+            }
+            glideLoader.loadImageFromStorage(imageView, hit);
             imageView.setOnClickListener(v -> i2RecyclerMain.imgClicked(position));
         }
 

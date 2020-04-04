@@ -11,15 +11,14 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.payts.youpics.coursework.model.GlideLoader;
+import ru.payts.youpics.coursework.model.cache.PicsCache;
+import ru.payts.youpics.coursework.model.glide.GlideLoader;
 import ru.payts.youpics.coursework.model.PhotoData;
 import ru.payts.youpics.coursework.model.database.YoupicsDatabase;
 import ru.payts.youpics.coursework.model.entity.PhotoSet;
 import ru.payts.youpics.coursework.model.retrofit.ApiHelper;
 import ru.payts.youpics.coursework.presenter.DetailsPresenter;
-import ru.payts.youpics.coursework.presenter.I2RecyclerMain;
 import ru.payts.youpics.coursework.presenter.MainPresenter;
-import ru.payts.youpics.coursework.view.MainAdapter;
 
 @Module
 public class YoupicsAppModule {
@@ -50,20 +49,26 @@ public class YoupicsAppModule {
 
     @Singleton
     @Provides
-    GlideLoader provideGlideLoader() {
-        return new GlideLoader();
+    GlideLoader provideGlideLoader(PicsCache picsCache) {
+        return new GlideLoader(picsCache);
+    }
+
+    @Singleton
+    @Provides
+    PicsCache provideImageCache() {
+        return new PicsCache();
     }
 
     @Singleton
     @Provides
     MainPresenter provideMainPresenter(Context context) {
-        return new MainPresenter(context);
+        return new MainPresenter(application.getApplicationContext());
     }
 
     @Singleton
     @Provides
     DetailsPresenter provideDetailsPresenter(Context context) {
-        return new DetailsPresenter(context);
+        return new DetailsPresenter(application.getApplicationContext());
     }
 
     @Singleton
@@ -72,6 +77,7 @@ public class YoupicsAppModule {
         return Room.databaseBuilder(application.getApplicationContext(),
                 YoupicsDatabase .class, "youpics_database").build();
     }
+
 
 
  /*   @Singleton

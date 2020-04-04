@@ -29,8 +29,8 @@ public class ApiHelper {
                 .create(IApiService.class);
     }
 
-    public Observable<PhotoSet> requestServer(String apiKey) {
-        return api.getPhotoSetBySearch(apiKey, "", 1, 48, "").subscribeOn(Schedulers.io());
+    public Observable<PhotoSet> requestServer(String apiKey, String query, boolean editors_choice) {
+        return api.getPhotoSetBySearch(apiKey, query, editors_choice,1, 24, "").subscribeOn(Schedulers.io());
     }
 
     public Observable<PhotoSet> requestServerByID(String apiKey, String picID) {

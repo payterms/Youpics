@@ -3,6 +3,7 @@ package ru.payts.youpics.coursework.model.database;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -20,9 +21,9 @@ public interface HitDao {
     Single<List<HitRec>> getAllById(int id);
 
     @Query("SELECT * FROM table_hits WHERE picId = :picId")
-    Single<List<HitRec>> getAllByPicId(String picId);
+    Single<HitRec> getPictureRecordByPicId(String picId);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     Single<Long> insert(HitRec hit);
 
     @Insert
@@ -30,6 +31,9 @@ public interface HitDao {
 
     @Delete
     Single<Integer> delete(HitRec hit);
+
+    @Query("DELETE FROM table_hits")
+    Single<Integer> deleteAll();
 
     @Update
     Single<Integer> update(HitRec hit);

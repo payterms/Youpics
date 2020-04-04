@@ -23,7 +23,6 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     private static final String TAG = "DetailsPresenter";
 
-
     @Inject
     ApiHelper apiHelper;
 
@@ -42,19 +41,8 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     @Override
     protected void onFirstViewAttach() {
         Log.d(TAG, "DetailsPresenter: onFirstViewAttach ");
-        //getSinglePhoto(1);
     }
 
-    public void getSinglePhoto(int id) {
-        String apiKey = context.getString(R.string.pixabay_api_key);
-        Observable<PhotoSet> single = apiHelper.requestServer(apiKey);
-
-        Disposable disposable = single.observeOn(AndroidSchedulers.mainThread()).subscribe(photoSet -> {
-            photoData.setTotal(photoSet.total);
-            photoData.setTotalHits(photoSet.totalHits);
-            photoData.setList(photoSet.hits);
-        }, throwable -> Log.e(TAG, "onError " + throwable));
-    }
 
     public Hit getPhotoByPos(int index) {
         return photoData.getElementValueAtIndex(index);
